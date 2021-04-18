@@ -19,11 +19,11 @@ def get_vha_data(index):
     print('File {} retrieved.'.format(index))
 
 
-for i in range(1, 28):
-    if i in [12, 20]:
-        continue  # not retrieving data for KyivCity and Sevastopol'
-    else:
-        get_vha_data(i)
+# for i in range(1, 28):
+#     if i in [12, 20]:
+#         continue  # not retrieving data for KyivCity and Sevastopol'
+#     else:
+#         get_vha_data(i)
 
 
 # -------------------------------------------
@@ -45,6 +45,7 @@ def files_to_dataframe(path):
             df[index] = df[index].drop(df[index].loc[df[index]['VHI'] == -1].index)  # cleaning all empty data
             df[index] = df[index].drop(index=2078)  # deleting weird last row
             df[index] = df[index].drop(columns=['empty'])
+            df[index]['Week'] = df[index]['Week'].astype(int)
 
     return df
 
@@ -68,74 +69,72 @@ def switch_indexation(df_dict, new_pairs_dict):
 
     return new_dict
 
+# df = files_to_dataframe(r'./')
+# print(df.keys())
+# # df['1'].head()
 
-# -------------------------------------------
-df = files_to_dataframe(r'./')
-print(df.keys())
+# new_pairs = {'Vinnytsya': 1, 'Volyn': 2, 'Dnipro': 3, 'Donetsk': 4, 'Zhytomyr': 5, 'Zakarpattya': 6, 'Zaporizhya': 7,
+#              'Frankivsk': 8,
+#              'Kyiv': 9, 'Kropyvnytskiy': 10, 'Luhansk': 11, 'Lviv': 12, 'Mykolayiv': 13, 'Odesa': 14, 'Poltava': 15,
+#              'Rivne': 16, 'Sumy': 17,
+#              'Ternopil': 18, 'Kharkiv': 19, 'Kherson': 20, 'Khmelnytskyi': 21, 'Cherkasy': 22, 'Chernivtsi': 23,
+#              'Chernihiv': 24, 'Crimea': 25}
+
+# df = switch_indexation(df, new_pairs)
+# print(df.keys())
 # df['1'].head()
 
-new_pairs = {'Vinnytsya': 1, 'Volyn': 2, 'Dnipro': 3, 'Donetsk': 4, 'Zhytomyr': 5, 'Zakarpattya': 6, 'Zaporizhya': 7,
-             'Frankivsk': 8,
-             'Kyiv': 9, 'Kropyvnytskiy': 10, 'Luhansk': 11, 'Lviv': 12, 'Mykolayiv': 13, 'Odesa': 14, 'Poltava': 15,
-             'Rivne': 16, 'Sumy': 17,
-             'Ternopil': 18, 'Kharkiv': 19, 'Kherson': 20, 'Khmelnytskyi': 21, 'Cherkasy': 22, 'Chernivtsi': 23,
-             'Chernihiv': 24, 'Crimea': 25}
 
-df = switch_indexation(df, new_pairs)
-print(df.keys())
-df['1'].head()
+# -------------------------------------------
+# def get_year_vhi(region_idx, year):
+#     idx = str(region_idx)
+#
+#     return df[idx][df[idx]['Year'] == str(year)]['VHI']
+
+
+# result = get_year_vhi(16, 2002).tolist()
+# print("VHI for region {} in a {}".format(16, 2002))
+# print(result)
 
 
 # -------------------------------------------
-def get_year_vhi(region_idx, year):
-    idx = str(region_idx)
-
-    return df[idx][df[idx]['Year'] == str(year)]['VHI']
-
-
-result = get_year_vhi(16, 2002).tolist()
-print("VHI for region {} in a {}".format(16, 2002))
-print(result)
+# def get_year_extr(region_idx, year):
+#     idx = str(region_idx)
+#     min_v = df[idx][df[idx]['Year'] == str(year)]['VHI'].min()
+#     max_v = df[idx][df[idx]['Year'] == str(year)]['VHI'].max()
+#     return min_v, max_v
 
 
-# -------------------------------------------
-def get_year_extr(region_idx, year):
-    idx = str(region_idx)
-    min_v = df[idx][df[idx]['Year'] == str(year)]['VHI'].min()
-    max_v = df[idx][df[idx]['Year'] == str(year)]['VHI'].max()
-    return min_v, max_v
-
-
-result = get_year_extr(16, 2002)
-print("VHI for region {} in a {}:".format(16, 2002))
-print("min: {}\tmax: {}".format(result[0], result[1]))
+# result = get_year_extr(16, 2002)
+# print("VHI for region {} in a {}:".format(16, 2002))
+# print("min: {}\tmax: {}".format(result[0], result[1]))
 
 # ------------------------------------------
-import numpy as np
+# import numpy as np
+#
+#
+# def get_extreme_drought_years(region_idx):
+#     idx = str(region_idx)
+#     df_drought = df[idx][df[idx].VHI <= 15]
+#     years = np.unique(df_drought['Year'])
+#     return (years)
 
 
-def get_extreme_drought_years(region_idx):
-    idx = str(region_idx)
-    df_drought = df[idx][df[idx].VHI <= 15]
-    years = np.unique(df_drought['Year'])
-    return (years)
-
-
-result = get_extreme_drought_years(25)
-print("Years with extreme drought level in region {}:".format(25))
-for year in result:
-    print(year)
+# result = get_extreme_drought_years(25)
+# print("Years with extreme drought level in region {}:".format(25))
+# for year in result:
+#     print(year)
 
 
 # -------------------------------------------
-def get_moderate_drought_years(region_idx):
-    idx = str(region_idx)
-    df_drought = df[idx][df[idx].VHI <= 35]
-    years = np.unique(df_drought['Year'])
-    return (years)
+# def get_moderate_drought_years(region_idx):
+#     idx = str(region_idx)
+#     df_drought = df[idx][df[idx].VHI <= 35]
+#     years = np.unique(df_drought['Year'])
+#     return (years)
 
 
-result = get_moderate_drought_years(16)
-print("Years with moderate drought level in region {}:".format(16))
-for year in result:
-    print(year)
+# result = get_moderate_drought_years(16)
+# print("Years with moderate drought level in region {}:".format(16))
+# for year in result:
+#     print(year)
